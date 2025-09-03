@@ -4,13 +4,17 @@
 
 namespace duckdb {
 
-class NanodbcExtension : public Extension {
+class ExtensionLoader; // Forward declaration
+
+class NanodbcExtension {
 public:
-    void Load(DuckDB &db) override;
-    std::string Name() override {
+    static void Load(ExtensionLoader &loader);
+    
+    static std::string Name() {
         return "nanodbc";
     }
-    std::string Version() const override {
+    
+    static std::string Version() {
 #ifdef EXT_VERSION_NANODBC
         return EXT_VERSION_NANODBC;
 #else
