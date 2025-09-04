@@ -51,6 +51,7 @@ public:
     int32_t GetInt32(idx_t colIdx);
     int64_t GetInt64(idx_t colIdx);
     double GetDouble(idx_t colIdx);
+    dtime_t GetTime(idx_t colIdx);
     timestamp_t GetTimestamp(idx_t colIdx);
     
     // Bind parameter values
