@@ -1,0 +1,48 @@
+# name: test/sql/odbc_time.test
+# description: Test ODBC extension's table scanning functionality with various data types
+# group: [odbc]
+
+require nanodbc
+
+require-env NANODBC_ENVIRONMENT
+
+# Alternative simpler TIME tests in case complex PostgreSQL syntax doesn't work through ODBC
+
+# Test basic TIME literal recognition
+query TT
+SELECT 
+    simple_time,
+    TYPEOF(simple_time) as time_type
+FROM odbc_query(
+    query='SELECT ''14:30:25''::TIME as simple_time', 
+    connection='RNAcentral'
+);
+----
+14:30:25
+TIME
+
+# Test TIME with basic comparison
+query TI
+SELECT 
+    time_val,
+    CASE WHEN time_val > '12:00:00'::TIME THEN 1 ELSE 0 END as is_afternoon
+FROM odbc_query(
+    query='SELECT ''15:30:00''::TIME as time_val', 
+    connection='RNAcentral'
+);
+----
+15:30:00
+1
+
+# Test TIME with standard SQL CAST function  
+query TT
+SELECT 
+    cast_time,
+    TYPEOF(cast_time) as time_type
+FROM odbc_query(
+    query='SELECT CAST(''09:45:15'' AS TIME) as cast_time', 
+    connection='RNAcentral'
+);
+----
+09:45:15
+TIME
