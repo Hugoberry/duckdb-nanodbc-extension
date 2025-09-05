@@ -243,6 +243,28 @@ double OdbcStatement::GetDouble(idx_t colIdx) {
     }
 }
 
+dtime_t OdbcStatement::GetTime(idx_t colIdx) {
+    if (!has_result) {
+        throw BinderException("No result available");
+    }
+    
+    try {
+        if (result.is_null(colIdx)) {
+            // Return midnight for null
+            return Time::FromTime(0, 0, 0, 0);
+        }
+        
+        // Get timestamp using nanodbc
+        nanodbc::time ts = result.get<nanodbc::time>(colIdx);
+
+        // Convert to DuckDB timestamp
+        return Time::FromTime(ts.hour, ts.min, ts.sec);
+    } catch (const nanodbc::database_error& e) {
+        OdbcUtils::ThrowException("get timestamp value", e);
+        return Time::FromTime(0, 0, 0, 0); // Won't reach here due to exception
+    }
+}
+
 timestamp_t OdbcStatement::GetTimestamp(idx_t colIdx) {
     if (!has_result) {
         throw BinderException("No result available");

@@ -412,8 +412,8 @@ void ScanOdbcSource(ClientContext &context, TableFunctionInput &data, DataChunk 
                 }
                 
                 case LogicalTypeId::TIME: {
-                    timestamp_t ts = state.statement->GetTimestamp(col_idx);
-                    FlatVector::GetData<dtime_t>(out_vec)[out_idx] = Timestamp::GetTime(ts);
+                    dtime_t ts = state.statement->GetTime(col_idx);
+                    FlatVector::GetData<dtime_t>(out_vec)[out_idx] = ts;
                     break;
                 }
                 
